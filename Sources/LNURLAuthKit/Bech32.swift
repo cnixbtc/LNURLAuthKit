@@ -42,20 +42,25 @@ private extension Bech32 {
         
         let endOfHrpPos = lowercasedBechString.distance(from: lowercasedBechString.startIndex, to: endOfHrpIdx)
 
-        if endOfHrpPos < 1 || endOfHrpPos + 7 > bechString.count || (limit && bechString.count > 90) {
+        if endOfHrpPos < 1 || (endOfHrpPos + 7) > lowercasedBechString.count {
             return nil
         }
+        
+        if limit && lowercasedBechString.count > 90 {
+           return nil
+        }
 
-        let humanReadablePart = String(bechString.prefix(endOfHrpPos))
-        let dataPart = bechString.suffix(bechString.count - humanReadablePart.count - 1)
+        let humanReadablePart = String(lowercasedBechString.prefix(endOfHrpPos))
+        let dataPart = lowercasedBechString.suffix(lowercasedBechString.count - humanReadablePart.count - 1)
 
         var data = Data()
         for character in dataPart {
+            print(character)
             guard let charIdx = Bech32.alphabet.firstIndex(of: character) else { return nil }
             let charPos = Bech32.alphabet.distance(from: Bech32.alphabet.startIndex, to: charIdx)
             data.append(UInt8(charPos))
         }
-
+        
         guard verifyChecksum(humanReadablePart: humanReadablePart, data: data) else { return nil }
 
         return (humanReadablePart, Data(data[..<(data.count - 6)]))
