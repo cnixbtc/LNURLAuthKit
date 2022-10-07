@@ -5,7 +5,8 @@ import PackageDescription
 let package = Package(
     name: "LNURLAuthKit",
     platforms: [
-        .macOS(.v10_15),
+        .iOS(.v15),
+        .macOS(.v10_15)
     ],
     products: [
         .library(name: "LNURLAuthKit", targets: ["LNURLAuthKit"]),
