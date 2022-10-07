@@ -10,6 +10,20 @@ public struct LNURLAuth {
     private let tag: String
     private let k1: String
     private let action: String?
+    
+    public init(identity: LNURLAuthIdentity, lnurl: String) throws {
+        let url = try Bech32.decode(lnurl: lnurl)
+        
+        try self.init(identity: identity, url: url)
+    }
+    
+    public init(identity: LNURLAuthIdentity, url: String) throws {
+        guard let url = URL(string: url) else {
+            throw LNURLAuthError.invalidUrl()
+        }
+        
+        try self.init(identity: identity, url: url)
+    }
 
     public init(identity: LNURLAuthIdentity, url: URL) throws {
         self.identity = identity

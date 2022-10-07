@@ -7,4 +7,7 @@ public enum LNURLAuthError: Error {
     
     // LNURLAuthIdentity Errors
     case privateKeyGenerationFailed(description: String)
+    
+    // Bech32 Errors
+    case invalidLNURL
 }

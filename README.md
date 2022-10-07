@@ -18,37 +18,12 @@ Each identity will be backed by a different keypair.
 Different linking keys will be derived from this identity keypair for each service using the method described in [LUD-13](https://github.com/fiatjaf/lnurl-rfc/blob/luds/13.md).
 
 ``` swift
-// Create two online identities: One for private use, one for work.
+let lnurl = "lnurl1..."
 
-let privateIdentity = try LNURLAuthIdentity()
 let workIdentity = try LNURLAuthIdentity()
+let auth = try LNURLAuth(identity: workIdentity, lnurl: lnurl)
 
-// Login using your private identity:
+let signedUrl = try auth.sign()
 
-let callbackForPrivateLogin = try LNURLAuth(
-    identity: privateIdentity,
-    url: await fetchStackerNewsLoginUrl()
-).sign()
-
-await login(callbackForPrivateLogin)
-
-// Later on, login using your work identity:
-
-let callbackForWorkLogin = try LNURLAuth(
-    identity: workIdentity,
-    url: fetchStackerNewsLoginUrl()
-).sign()
-
-login(callbackForWorkLogin)
-
-// Helpers:
-
-func fetchStackerNewsLoginUrl() async -> URL {
-    // Get a LNURL-Auth login url from stacker.news...
-    // Decoding the Bech32 LNURLs is still todo.
-}
-
-func login(callback url: URL) async {
-    // Do a GET on callback url to login.
-}
-``` 
+// Do a GET on `signedUrl` to login using your work identity...
+```
