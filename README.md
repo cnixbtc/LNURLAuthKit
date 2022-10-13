@@ -8,7 +8,7 @@ LNURLAuthKit is available as a [Swift Package Manager](https://swift.org/package
 To use it, add the following dependency to your `Package.swift` file:
 
 ``` swift
-.package(url: "https://github.com/cnixbtc/LNURLAuthKit.git", from: "0.1.0"),
+.package(url: "https://github.com/cnixbtc/LNURLAuthKit.git", from: "0.2.0"),
 ```
 
 ## Functionality
