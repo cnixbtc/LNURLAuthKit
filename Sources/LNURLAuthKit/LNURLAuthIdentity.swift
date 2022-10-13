@@ -3,11 +3,19 @@ import secp256k1
 import Crypto
 
 public struct LNURLAuthIdentity {
-    private let privateKey: secp256k1.Signing.PrivateKey
+    private let underlyingPrivateKey: secp256k1.Signing.PrivateKey
+    
+    public var privateKey: String {
+        return underlyingPrivateKey.rawRepresentation.hex()
+    }
+    
+    public var publicKey: String {
+        return underlyingPrivateKey.publicKey.rawRepresentation.hex()
+    }
     
     public init() throws {
         do {
-            privateKey = try secp256k1.Signing.PrivateKey()
+            underlyingPrivateKey = try secp256k1.Signing.PrivateKey()
         } catch {
             throw LNURLAuthError.privateKeyGenerationFailed(description: error.localizedDescription)
         }
@@ -19,7 +27,7 @@ public struct LNURLAuthIdentity {
     
     public init(privateKey: Data) throws {
         do {
-            self.privateKey = try secp256k1.Signing.PrivateKey(rawRepresentation: privateKey)
+            self.underlyingPrivateKey = try secp256k1.Signing.PrivateKey(rawRepresentation: privateKey)
         } catch {
             throw LNURLAuthError.privateKeyGenerationFailed(description: error.localizedDescription)
         }
@@ -56,7 +64,7 @@ internal extension LNURLAuthIdentity {
         let canonicalPhraseDigest = Crypto.SHA256.hash(
             data: canonicalPhrase.data(using: .utf8)!
         )
-        let deterministicSignature = try privateKey.ecdsa.signature(
+        let deterministicSignature = try underlyingPrivateKey.ecdsa.signature(
             for: HashDigest(canonicalPhraseDigest.bytes)
         ).rawRepresentation
         
